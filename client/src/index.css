@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-deep-blue text-white font-sans;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-glass-white backdrop-blur-md border border-glass-border shadow-xl;
+  }
+
+  .glass-card {
+    @apply bg-card-gradient backdrop-blur-lg border border-glass-border shadow-2xl rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:from-orange-600 hover:to-red-700 transition transform hover:scale-105 shadow-lg;
+  }
+}
+
+body {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Blinkit-style popup slide-up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
