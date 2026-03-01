@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Fuel, PhoneCall } from 'lucide-react';
+import { Fuel, PhoneCall, Car } from 'lucide-react';
 
 const Navbar = () => {
     return (
@@ -13,6 +13,9 @@ const Navbar = () => {
                 <div className="flex items-center space-x-2 md:space-x-6">
                     <Link to="/user-dashboard" className="text-gray-700 hover:text-red-600 font-medium transition">
                         Request Fuel
+                    </Link>
+                    <Link to="/vehicle-profile" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 font-medium transition">
+                        <Car size={16} /> My Vehicles
                     </Link>
                     <Link to="/pump-dashboard" className="text-gray-700 hover:text-primary font-medium transition">
                         Pump Station

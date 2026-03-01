@@ -7,6 +7,7 @@ import UserDashboard from './pages/UserDashboard';
 import PumpDashboard from './pages/PumpDashboard';
 import AgentDashboard from './pages/AgentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import VehicleProfile from './pages/VehicleProfile';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/pump-dashboard" element={<PumpDashboard />} />
                 <Route path="/agent-dashboard" element={<AgentDashboard />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/vehicle-profile" element={<VehicleProfile />} />
             </Routes>
         </Layout>
     );

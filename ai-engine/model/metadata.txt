@@ -1,0 +1,4 @@
+MAE:  1.0538
+RMSE: 2.3107
+Features: ['fuel_capacity_liters', 'current_fuel_liters', 'avg_mileage_kmpl', 'daily_travel_km', 'days_since_last_refill', 'historical_avg_refill_gap_days', 'highway_ratio', 'vtype_hatchback', 'vtype_motorcycle', 'vtype_sedan', 'vtype_suv', 'vtype_truck']
+Risk Classification Accuracy: 95.5%

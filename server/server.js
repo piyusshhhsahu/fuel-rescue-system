@@ -30,6 +30,14 @@ app.use('/api/agents', require('./routes/agentRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
+// ── FuelSense AI Routes ──────────────────────────────────────
+app.use('/api/vehicles', require('./routes/vehicleRoutes'));
+app.use('/api/fuel-logs', require('./routes/fuelLogRoutes'));
+app.use('/api/predictions', require('./routes/predictionRoutes'));
+
+// Expose Socket.io to routes (for prediction alerts)
+app.set('io', io);
+
 // Socket.io Logic
 io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);

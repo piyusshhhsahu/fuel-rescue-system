@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import API_URL from '../config/api';
 import { MapPin, Fuel, Phone, Droplet, Clock, CheckCircle, User as UserIcon, Zap, AlertTriangle, IndianRupee, Truck, CreditCard, Loader2, Crosshair } from 'lucide-react';
+import FuelPredictionWidget from '../components/FuelPredictionWidget';
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
@@ -81,6 +82,7 @@ const UserDashboard = () => {
     const [pumpsLoading, setPumpsLoading] = useState(false);
     const [allPumps, setAllPumps] = useState([]);
     const [trackingLocation, setTrackingLocation] = useState(false);
+    const [fuelAlert, setFuelAlert] = useState(null);
 
     useEffect(() => {
         getLocation();
@@ -93,7 +95,12 @@ const UserDashboard = () => {
             if (data.agentName) setAgentName(data.agentName);
             if (data.status === 'Delivered') setMessage('Fuel Delivered! Thank you for using FuelRescue.');
         });
-        return () => { socket.off('connect'); socket.off('status_changed'); };
+        // FuelSense AI: Listen for high-risk fuel alerts
+        socket.on('fuel_alert', (data) => {
+            setFuelAlert(data);
+            setTimeout(() => setFuelAlert(null), 10000);
+        });
+        return () => { socket.off('connect'); socket.off('status_changed'); socket.off('fuel_alert'); };
     }, []);
 
     // ─── When user location is detected, fetch nearest pump ───
@@ -588,7 +595,23 @@ const UserDashboard = () => {
                         </div>
                     )}
                 </div>
+
+                {/* ─── FuelSense AI Prediction Widget ─── */}
+                <div className="md:col-span-2 mt-4">
+                    <FuelPredictionWidget />
+                </div>
             </div>
+
+            {/* ─── Fuel Alert Toast ─── */}
+            {fuelAlert && (
+                <div className="fixed bottom-6 right-6 z-50 max-w-sm bg-red-600/90 backdrop-blur-md border border-red-500 text-white rounded-xl p-4 shadow-2xl animate-bounce">
+                    <div className="flex items-center gap-2 mb-1">
+                        <AlertTriangle size={18} /> <span className="font-bold">FuelSense AI Alert</span>
+                    </div>
+                    <p className="text-sm">{fuelAlert.message}</p>
+                    <button onClick={() => setFuelAlert(null)} className="mt-2 text-xs underline opacity-70">Dismiss</button>
+                </div>
+            )}
         </div>
     );
 };
