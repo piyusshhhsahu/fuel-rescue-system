@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Auth = () => {
@@ -34,7 +35,7 @@ const Auth = () => {
 
             // Real Logic:
             const payload = { ...formData, role };
-            const res = await axios.post(`http://localhost:5000${endpoint}`, payload);
+            const res = await axios.post(`${API_URL}${endpoint}`, payload);
             const { token, user } = res.data;
 
             localStorage.setItem('token', token);

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import io from 'socket.io-client';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { MapPin, Navigation, Phone, CheckCircle, XCircle, Clock, Fuel, Truck, IndianRupee, AlertTriangle, Bike, Package } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
@@ -17,7 +18,7 @@ const deliveryIcon = L.icon({
     shadowUrl: iconShadow, iconSize: [25, 41], iconAnchor: [12, 41]
 });
 
-const socket = io('http://localhost:5000');
+const socket = io(API_URL);
 
 function FlyToMarker({ position }) {
     const map = useMap();
@@ -53,7 +54,7 @@ const AgentDashboard = () => {
 
     const fetchAssignedOrders = async (agentId) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/orders?agent=${agentId}`);
+            const res = await axios.get(`${API_URL}/api/orders?agent=${agentId}`);
             const orders = res.data;
             const active = orders.find(o => ['Assigned', 'On the Way'].includes(o.status));
             if (active) setActiveOrder(active);
@@ -67,7 +68,7 @@ const AgentDashboard = () => {
     const handleAccept = async (assignment) => {
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            await axios.patch(`http://localhost:5000/api/orders/${assignment.orderId}/status`, {
+            await axios.patch(`${API_URL}/api/orders/${assignment.orderId}/status`, {
                 status: 'On the Way', agentId: user?.id
             });
             socket.emit('agent_response', {
@@ -84,7 +85,7 @@ const AgentDashboard = () => {
     const handleDecline = async (assignment) => {
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            await axios.patch(`http://localhost:5000/api/orders/${assignment.orderId}/status`, { status: 'Accepted' });
+            await axios.patch(`${API_URL}/api/orders/${assignment.orderId}/status`, { status: 'Accepted' });
             socket.emit('agent_response', {
                 orderId: assignment.orderId, status: 'Accepted',
                 agentId: user?.id, agentName: user?.name,
@@ -98,7 +99,7 @@ const AgentDashboard = () => {
         if (!activeOrder) return;
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            await axios.patch(`http://localhost:5000/api/orders/${activeOrder._id}/status`, { status: 'Delivered' });
+            await axios.patch(`${API_URL}/api/orders/${activeOrder._id}/status`, { status: 'Delivered' });
             socket.emit('agent_response', {
                 orderId: activeOrder._id, status: 'Delivered',
                 agentId: user?.id, agentName: user?.name,

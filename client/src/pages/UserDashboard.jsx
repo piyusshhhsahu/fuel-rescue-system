@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import io from 'socket.io-client';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { MapPin, Fuel, Phone, Droplet, Clock, CheckCircle, User as UserIcon, Zap, AlertTriangle, IndianRupee, Truck, CreditCard, Loader2, Crosshair } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
@@ -32,7 +33,7 @@ const pumpIcon = L.divIcon({
     iconAnchor: [7, 7]
 });
 
-const socket = io('http://localhost:5000');
+const socket = io(API_URL);
 
 // ─── Pricing constants (mirrored from backend for instant UI) ───
 const FUEL_PRICES = { Petrol: 106, Diesel: 98 };
@@ -113,7 +114,7 @@ const UserDashboard = () => {
         if (!location) return;
         setPumpsLoading(true);
         try {
-            const { data: pumps } = await axios.get(`http://localhost:5000/api/pumps?lat=${location[0]}&lng=${location[1]}`);
+            const { data: pumps } = await axios.get(`${API_URL}/api/pumps?lat=${location[0]}&lng=${location[1]}`);
 
             if (pumps && pumps.length > 0) {
                 setAllPumps(pumps);
@@ -232,7 +233,7 @@ const UserDashboard = () => {
         setPaymentProcessing(true);
         try {
             // 1. Create Razorpay order
-            const { data: rzpOrder } = await axios.post('http://localhost:5000/api/payments/create-order', {
+            const { data: rzpOrder } = await axios.post(`${API_URL}/api/payments/create-order`, {
                 amount: pricing.totalCost,
                 receipt: `fuel_${Date.now()}`
             });
@@ -253,10 +254,10 @@ const UserDashboard = () => {
                     paymentMethod: 'Razorpay',
                     razorpayOrderId: rzpOrder.id
                 };
-                const { data: order } = await axios.post('http://localhost:5000/api/orders', payload);
+                const { data: order } = await axios.post(`${API_URL}/api/orders`, payload);
 
                 // Verify mock payment
-                await axios.post('http://localhost:5000/api/payments/verify', {
+                await axios.post(`${API_URL}/api/payments/verify`, {
                     razorpay_order_id: rzpOrder.id,
                     orderId: order._id,
                     mock: true
@@ -291,9 +292,9 @@ const UserDashboard = () => {
                             razorpayOrderId: response.razorpay_order_id,
                             razorpayPaymentId: response.razorpay_payment_id
                         };
-                        const { data: order } = await axios.post('http://localhost:5000/api/orders', payload);
+                        const { data: order } = await axios.post(`${API_URL}/api/orders`, payload);
 
-                        await axios.post('http://localhost:5000/api/payments/verify', {
+                        await axios.post(`${API_URL}/api/payments/verify`, {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,

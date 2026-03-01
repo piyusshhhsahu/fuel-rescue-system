@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { BarChart3, Package, IndianRupee, CreditCard, Truck, Fuel, TrendingUp, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -12,7 +13,7 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/admin/stats');
+            const { data } = await axios.get(`${API_URL}/api/admin/stats`);
             setStats(data);
         } catch (err) {
             console.error(err);
@@ -151,8 +152,8 @@ const AdminDashboard = () => {
                                         </td>
                                         <td className="py-3">
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-500/20 text-green-400' :
-                                                    order.status === 'Cancelled' ? 'bg-red-500/20 text-red-400' :
-                                                        'bg-blue-500/20 text-blue-400'
+                                                order.status === 'Cancelled' ? 'bg-red-500/20 text-red-400' :
+                                                    'bg-blue-500/20 text-blue-400'
                                                 }`}>
                                                 {order.status}
                                             </span>

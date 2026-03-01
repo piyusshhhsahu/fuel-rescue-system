@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { Clock, CheckCircle, XCircle, MapPin, User, Truck, RefreshCw } from 'lucide-react';
+import API_URL from '../config/api';
 
-const socket = io('http://localhost:5000');
+const socket = io(API_URL);
 
 const PumpDashboard = () => {
     const [requests, setRequests] = useState([]);
@@ -36,7 +37,7 @@ const PumpDashboard = () => {
 
     const fetchRequests = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/orders');
+            const res = await axios.get(`${API_URL}/api/orders`);
             setRequests(res.data);
         } catch (err) {
             console.error(err);
@@ -45,7 +46,7 @@ const PumpDashboard = () => {
 
     const fetchAgents = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/agents');
+            const res = await axios.get(`${API_URL}/api/agents`);
             setAgents(res.data);
         } catch (err) {
             console.error(err);
@@ -55,7 +56,7 @@ const PumpDashboard = () => {
     const updateStatus = async (id, status, agentId = null, agentName = null) => {
         try {
             const payload = { status, agentId, agentName };
-            const res = await axios.patch(`http://localhost:5000/api/orders/${id}/status`, payload);
+            const res = await axios.patch(`${API_URL}/api/orders/${id}/status`, payload);
 
             // UI Update
             setRequests(requests.map(req => req._id === id ? { ...req, status, agent: agentId, agentName } : req));
